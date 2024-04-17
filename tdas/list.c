@@ -1,19 +1,9 @@
 #include "list.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-typedef struct Node {
-  void *data;
-  struct Node *next;
-} Node;
 
-struct List {
-  Node *head;
-  Node *tail;
-  Node *current;
-};
-
-typedef List List;
 
 List *list_create() {
   List *newList = (List *)malloc(sizeof(List));
