@@ -3,6 +3,9 @@
 #include <time.h>
 #include <string.h>
 #include "tdas/list.h"
+#include "tdas/map.h"
+#include "tdas/queue.h"
+#include "tdas/priority_queue.h"
 #include <stdbool.h>
 typedef struct {
     char nombre[50];
@@ -11,6 +14,7 @@ typedef struct {
     char prioridad[50];
     char hora[50];
 } Persona;
+// Función para mostrar la lista de pacientes en espera
 
 // Función para limpiar la pantalla
 void limpiarPantalla() { system("clear"); }
@@ -64,14 +68,53 @@ void registrar_paciente(List *pacientes) {
 
 
 // Función para mostrar la lista de pacientes en espera
-void mostrar_lista_pacientes(List *pacientes) {
-    printf("Pacientes en espera: \n");
-    // Implementación de la lógica para recorrer y mostrar los pacientes
+void mostrar_lista_pacientes(List *pacientes, Queue *cola_prioridad) {
+    pacientes->current = pacientes->head; // Asegurar que el puntero current esté al principio de la lista
+    while (pacientes->current != NULL) {
+        // Verificar si la prioridad del paciente es "Alta"
+        if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Alta") == 0) {
+            // Agregar el paciente a la cola de prioridad
+            queue_insert(cola_prioridad,pacientes->current->data);
+        }
+        pacientes->current = pacientes->current->next; // Avanzar al siguiente nodo
+    }
+    pacientes->current = pacientes->head;
+    while (pacientes->current != NULL){
+        // Verificar si la prioridad del paciente es "Media"
+        if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Media") == 0){
+            // Agregar el paciente a la cola de prioridad
+            queue_insert(cola_prioridad,pacientes->current->data);
+        }
+        pacientes->current = pacientes->current->next;
+    }
+    pacientes->current = pacientes->head;
+    while (pacientes->current != NULL){
+        // Verificar si la prioridad del paciente es "Bajo"
+        if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Bajo") == 0){
+            // Agregar el paciente a la cola de prioridad
+            queue_insert(cola_prioridad,pacientes->current->data);
+        }
+        pacientes->current = pacientes->current->next;
+    }
+    // Mostrar la lista de pacientes en espera
+    printf("Lista de pacientes en espera:\n");
+    while (cola_prioridad->head != NULL){
+        Persona *paciente = (Persona *)cola_prioridad->head->data;
+        printf("Nombre: %s\n", paciente->nombre);
+        printf("Edad: %d\n", paciente->edad);
+        printf("Sintoma: %s\n", paciente->sintoma);
+        printf("Prioridad: %s\n", paciente->prioridad);
+        printf("Hora: %s\n", paciente->hora);
+        printf("------------------------\n");
+        cola_prioridad->head = cola_prioridad->head->next;
+    }
 }
+
 
 int main() {
     char opcion;
-    List *pacientes = list_create(); // Lista para gestionar los pacientes
+    List *pacientes = list_create();// Lista para gestionar los pacientes
+    Queue *cola_prioridad = queue_create(cola_prioridad);
 
     mostrarMenuPrincipal();
     printf("Ingrese su opción: ");
@@ -83,42 +126,36 @@ int main() {
                 registrar_paciente(pacientes);
                 break;
             case '2':
-              if(pacientes->head == NULL)  {
+              if (pacientes->head == NULL) {
                 printf("No hay pacientes registrados.\n");
-                  break;
-              }
-              bool pacienteEncontrado = false;
-              printf("Escriba el nombre del paciente al que le quiere asignar prioridad\n");
-              char nombre[50];
-              scanf("%s",nombre);
-              pacientes->current = pacientes->head;
-              if (strcmp(((Persona*)(pacientes->current->data))->nombre, nombre) == 0){
-                printf("Escriba la prioridad que le quiere asignar al paciente\n");
-                scanf("%s",((Persona*)(pacientes->current->data))->prioridad);
-                printf("Prioridad asignada con éxito.\n");
-                pacienteEncontrado = true;
                 break;
               }
 
-              while(pacientes->current->next != NULL){
-                  if(strcmp(((Persona*)pacientes->current->data)->nombre,nombre) == 0){
-                    printf("escriba el nivel de prioridad que le quiere asignar al paciente entre Baja, Media, Alta\n");
-                    scanf("%s",((Persona*)pacientes->current->data)->prioridad);
+              printf("Escriba el nombre del paciente al que le quiere asignar prioridad\n");
+              char nombre[50];
+              scanf("%s", nombre);
+
+              pacientes->current = pacientes->head;
+              bool pacienteEncontrado = false;
+
+              while (pacientes->current != NULL) {
+                if (strcmp(((Persona*)(pacientes->current->data))->nombre, nombre) == 0) {
+                    printf("Escriba el nivel de prioridad que le quiere asignar al paciente entre Baja, Media, Alta\n");
+                    scanf("%s", ((Persona*)(pacientes->current->data))->prioridad);
                     printf("Prioridad asignada con éxito.\n");
                     pacienteEncontrado = true;
                     break;
-                  }
-                
+                }
                 pacientes->current = pacientes->current->next;
-                  
               }
-              if(!pacienteEncontrado){
-                printf("el paciente %s no se encuentra en nuestra base de datos por favor registrelo\n",nombre);
+
+              if (!pacienteEncontrado) {
+                printf("El paciente %s no se encuentra en nuestra base de datos. Por favor, regístrelo.\n", nombre);
               }
-                // Lógica para asignar prioridad
-                break;
+
+              break;
             case '3':
-                mostrar_lista_pacientes(pacientes);
+                mostrar_lista_pacientes(pacientes, cola_prioridad);
                 break;
             case '4':
                 // Lógica para atender al siguiente paciente
