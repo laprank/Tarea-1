@@ -7,6 +7,7 @@
 #include "tdas/queue.h"
 #include "tdas/priority_queue.h"
 #include <stdbool.h>
+#include <ctype.h>
 typedef struct {
     char nombre[50];
     int edad;
@@ -15,6 +16,17 @@ typedef struct {
     char hora[50];
 } Persona;
 // Función para mostrar la lista de pacientes en espera
+void str_to_lower(char str[50]) {
+    for (int i = 0; i < 50 && str[i] != '\0'; i++) {
+        str[i] = tolower(str[i]);
+    }
+}
+
+void str_to_upper(char str[50]) {
+    for (int i = 0; i < 50 && str[i] != '\0'; i++) {
+        str[i] = toupper(str[i]);
+    }
+}
 
 // Función para limpiar la pantalla
 void limpiarPantalla() { system("clear"); }
@@ -49,22 +61,28 @@ void registrar_paciente(List *pacientes) {
         printf("Error: No se pudo asignar memoria para el paciente.\n");
         return;
     }
-    strcpy(paciente->prioridad,"Bajo");
+    strcpy(paciente->prioridad, "BAJA");
+
     printf("Registrar nuevo paciente escriba su nombre\n");
-    scanf(" %[^\n]",paciente->nombre);
+    scanf(" %[^\n]", paciente->nombre);
+    str_to_upper(paciente->nombre); // Convertir el nombre a mayúsculas
+
     printf("Escriba su edad\n");
-    scanf("%d",&(paciente->edad));
+    scanf("%d", &(paciente->edad));
     getchar(); 
-    printf("Escriba su sintoma\n");
-    scanf(" %[^\n]",paciente->sintoma);
+
+    printf("Escriba su síntoma\n");
+    scanf(" %[^\n]", paciente->sintoma);
+    str_to_upper(paciente->sintoma); // Convertir el síntoma a mayúsculas
+
     time_t hora_actual = time(NULL);
     struct tm *tm_hora_actual = localtime(&hora_actual);
     strftime(paciente->hora, sizeof(paciente->hora), "%H:%M:", tm_hora_actual);
+
     list_pushBack(pacientes, paciente);
+
     printf("Paciente registrado con éxito.\n");
 }
-
-
 
 
 // Función para mostrar la lista de pacientes en espera
@@ -130,6 +148,7 @@ int main() {
               printf("Escriba el nombre del paciente al que le quiere asignar prioridad\n");
               char nombre[50];
               scanf("%s", nombre);
+              str_to_upper(nombre);
 
               pacientes->current = pacientes->head;
               bool pacienteEncontrado = false;
@@ -138,6 +157,7 @@ int main() {
                 if (strcmp(((Persona*)(pacientes->current->data))->nombre, nombre) == 0) {
                     printf("Escriba el nivel de prioridad que le quiere asignar al paciente entre Baja, Media, Alta\n");
                     scanf("%s", ((Persona*)(pacientes->current->data))->prioridad);
+                    str_to_upper(((Persona*)(pacientes->current->data))->prioridad);
                     printf("Prioridad asignada con éxito.\n");
                     pacienteEncontrado = true;
                     break;
@@ -154,7 +174,7 @@ int main() {
               pacientes->current = pacientes->head; // Asegurar que el puntero current esté al principio de la lista
               while (pacientes->current != NULL) {
                   // Verificar si la prioridad del paciente es "Alta"
-                  if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Alta") == 0) {
+                  if (strcmp(((Persona *)pacientes->current->data)->prioridad, "ALTA") == 0) {
                       // Agregar el paciente a la cola de prioridad
                       queue_insert(cola_prioridad,pacientes->current->data);
                   }
@@ -163,7 +183,7 @@ int main() {
               pacientes->current = pacientes->head;
               while (pacientes->current != NULL){
                   // Verificar si la prioridad del paciente es "Media"
-                  if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Media") == 0){
+                  if (strcmp(((Persona *)pacientes->current->data)->prioridad, "MEDIA") == 0){
                       // Agregar el paciente a la cola de prioridad
                       queue_insert(cola_prioridad,pacientes->current->data);
                   }
@@ -172,7 +192,7 @@ int main() {
               pacientes->current = pacientes->head;
               while (pacientes->current != NULL){
                   // Verificar si la prioridad del paciente es "Bajo"
-                  if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Bajo") == 0){
+                  if (strcmp(((Persona *)pacientes->current->data)->prioridad, "BAJA") == 0){
                       // Agregar el paciente a la cola de prioridad
                       queue_insert(cola_prioridad,pacientes->current->data);
                   }
@@ -184,7 +204,7 @@ int main() {
                 pacientes->current = pacientes->head; // Asegurar que el puntero current esté al principio de la lista
                 while (pacientes->current != NULL) {
                     // Verificar si la prioridad del paciente es "Alta"
-                    if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Alta") == 0) {
+                    if (strcmp(((Persona *)pacientes->current->data)->prioridad, "ALTA") == 0) {
                         // Agregar el paciente a la cola de prioridad
                         queue_insert(cola_prioridad,pacientes->current->data);
                     }
@@ -193,7 +213,7 @@ int main() {
                 pacientes->current = pacientes->head;
                 while (pacientes->current != NULL){
                     // Verificar si la prioridad del paciente es "Media"
-                    if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Media") == 0){
+                    if (strcmp(((Persona *)pacientes->current->data)->prioridad, "MEDIA") == 0){
                         // Agregar el paciente a la cola de prioridad
                         queue_insert(cola_prioridad,pacientes->current->data);
                     }
@@ -202,7 +222,7 @@ int main() {
                 pacientes->current = pacientes->head;
                 while (pacientes->current != NULL){
                     // Verificar si la prioridad del paciente es "Bajo"
-                    if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Bajo") == 0){
+                    if (strcmp(((Persona *)pacientes->current->data)->prioridad, "BAJA") == 0){
                         // Agregar el paciente a la cola de prioridad
                         queue_insert(cola_prioridad,pacientes->current->data);
                     }
@@ -222,11 +242,12 @@ int main() {
             case '5':
                 printf("ingrese la prioridad que desea ver\n");
                 scanf("%s",prioridad);
-                if (strcmp(prioridad,"Bajo") == 0){
+                str_to_upper(prioridad);
+                if (strcmp(prioridad,"BAJA") == 0){
                   pacientes->current = pacientes->head;
                   while (pacientes->current != NULL){
                       // Verificar si la prioridad del paciente es "Bajo"
-                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Bajo") == 0){
+                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "BAJA") == 0){
                           // Agregar el paciente a la cola de prioridad
                           queue_insert(cola_prioridad,pacientes->current->data);
                       }
@@ -235,11 +256,11 @@ int main() {
                     mostrar_lista_pacientes(pacientes,cola_prioridad);
                     queue_clean(cola_prioridad);
                 }
-                else if(strcmp(prioridad,"Media") == 0){
+                else if(strcmp(prioridad,"MEDIA") == 0){
                   pacientes->current = pacientes->head;
                   while (pacientes->current != NULL){
                       // Verificar si la prioridad del paciente es "Media"
-                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Media") == 0){
+                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "MEDIA") == 0){
                           // Agregar el paciente a la cola de prioridad
                           queue_insert(cola_prioridad,pacientes->current->data);
                       }
@@ -248,11 +269,11 @@ int main() {
                     mostrar_lista_pacientes(pacientes,cola_prioridad);
                     queue_clean(cola_prioridad);
                 }
-                else if(strcmp(prioridad,"Alta") == 0){
+                else if(strcmp(prioridad,"ALTA") == 0){
                   pacientes->current = pacientes->head; // Asegurar que el puntero current esté al principio de la lista
                   while (pacientes->current != NULL) {
                       // Verificar si la prioridad del paciente es "Alta"
-                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Alta") == 0) {
+                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "ALTA") == 0) {
                           // Agregar el paciente a la cola de prioridad
                           queue_insert(cola_prioridad,pacientes->current->data);
                       }
