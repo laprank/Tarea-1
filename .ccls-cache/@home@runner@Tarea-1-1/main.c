@@ -240,7 +240,7 @@ int main() {
                 // Lógica para atender al siguiente paciente
                 break;
             case '5':
-                printf("ingrese la prioridad que desea ver\n");
+                printf("ingrese la prioridad que desea ver entre Baja Media o Alta\n");
                 scanf("%s",prioridad);
                 str_to_upper(prioridad);
                 if (strcmp(prioridad,"BAJA") == 0){
