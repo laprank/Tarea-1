@@ -110,6 +110,7 @@ int main() {
     char opcion;
     List *pacientes = list_create();// Lista para gestionar los pacientes
     Queue *cola_prioridad = queue_create(cola_prioridad);
+    char prioridad[10];
 
     mostrarMenuPrincipal();
     printf("Ingrese su opción: ");
@@ -219,7 +220,47 @@ int main() {
                 // Lógica para atender al siguiente paciente
                 break;
             case '5':
-                // Lógica para mostrar pacientes por prioridad
+                printf("ingrese la prioridad que desea ver\n");
+                scanf("%s",prioridad);
+                if (strcmp(prioridad,"Bajo") == 0){
+                  pacientes->current = pacientes->head;
+                  while (pacientes->current != NULL){
+                      // Verificar si la prioridad del paciente es "Bajo"
+                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Bajo") == 0){
+                          // Agregar el paciente a la cola de prioridad
+                          queue_insert(cola_prioridad,pacientes->current->data);
+                      }
+                      pacientes->current = pacientes->current->next;
+                  }
+                    mostrar_lista_pacientes(pacientes,cola_prioridad);
+                    queue_clean(cola_prioridad);
+                }
+                else if(strcmp(prioridad,"Media") == 0){
+                  pacientes->current = pacientes->head;
+                  while (pacientes->current != NULL){
+                      // Verificar si la prioridad del paciente es "Media"
+                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Media") == 0){
+                          // Agregar el paciente a la cola de prioridad
+                          queue_insert(cola_prioridad,pacientes->current->data);
+                      }
+                      pacientes->current = pacientes->current->next;
+                    }
+                    mostrar_lista_pacientes(pacientes,cola_prioridad);
+                    queue_clean(cola_prioridad);
+                }
+                else if(strcmp(prioridad,"Alta") == 0){
+                  pacientes->current = pacientes->head; // Asegurar que el puntero current esté al principio de la lista
+                  while (pacientes->current != NULL) {
+                      // Verificar si la prioridad del paciente es "Alta"
+                      if (strcmp(((Persona *)pacientes->current->data)->prioridad, "Alta") == 0) {
+                          // Agregar el paciente a la cola de prioridad
+                          queue_insert(cola_prioridad,pacientes->current->data);
+                      }
+                      pacientes->current = pacientes->current->next; // Avanzar al siguiente nodo
+                  }
+                    mostrar_lista_pacientes(pacientes,cola_prioridad);
+                    queue_clean(cola_prioridad);
+                 }
                 break;
             default:
                 puts("Opción no válida. Por favor, intente de nuevo.");
