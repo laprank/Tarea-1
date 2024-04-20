@@ -11,7 +11,7 @@ Para una configuración y ejecución rápida, sigue estos pasos:
 1. Visita [Repl.it](https://repl.it/).
 2. Inicia sesión o crea una nueva cuenta si aún no tienes una.
 3. En tu dashboard, selecciona "New Repl" y elige "Import from GitHub".
-4. Pega la URL del repositorio: `https://github.com/username/sistema-gestion-pacientes.git`.
+4. Pega la URL del repositorio: `https://github.com/laprank/Tarea-1.git`.
 5. Repl.it clonará el repositorio y preparará un entorno de ejecución.
 6. Presiona el botón "Run" para compilar y ejecutar la aplicación.
 
