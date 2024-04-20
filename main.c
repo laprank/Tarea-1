@@ -15,7 +15,7 @@ typedef struct {
     char prioridad[50];
     char hora[50];
 } Persona;
-// Función para mostrar la lista de pacientes en espera
+// Funcies para combertir cadenas en mayuscula o minuscula
 void str_to_lower(char str[50]) {
     for (int i = 0; i < 50 && str[i] != '\0'; i++) {
         str[i] = tolower(str[i]);
@@ -53,7 +53,6 @@ void mostrarMenuPrincipal() {
     puts("6) Salir");
 }
 
-// Función para registrar un paciente
 // Función para registrar un paciente
 void registrar_paciente(List *pacientes) {
     Persona *paciente = (Persona*)malloc(sizeof(Persona)); 
@@ -157,7 +156,7 @@ int main() {
                 if (strcmp(((Persona*)(pacientes->current->data))->nombre, nombre) == 0) {
                     printf("Escriba el nivel de prioridad que le quiere asignar al paciente entre Baja, Media, Alta\n");
                     scanf("%s", ((Persona*)(pacientes->current->data))->prioridad);
-                    str_to_upper(((Persona*)(pacientes->current->data))->prioridad);
+                    str_to_upper(((Persona*)(pacientes->current->data))->prioridad);// Convertir la prioridad a mayúsculas
                     printf("Prioridad asignada con éxito.\n");
                     pacienteEncontrado = true;
                     break;
